@@ -48,7 +48,7 @@ root.get('/', function(request, response) {
 	response.end('hello - all other calls are authenticated...');
 });
 
-root.auth.get(function() {
+root.auth.get(function(request, response) {
 	response.end('hello mr auth');
 });
 
