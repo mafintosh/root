@@ -1,0 +1,8 @@
+{
+ "name":"root",
+ "version":"0.1.1",
+ "dependencies": {"common":">=0.2.0", "router":">=0.5.0"},
+ "description":"a super lightweight web framework featuring connect middleware support and routing",
+ "keywords": ["lightweight", "web", "routing", "middleware", "connect"],
+ "author": "Mathias Buus Madsen <mathiasbuus@gmail.com>"
+}

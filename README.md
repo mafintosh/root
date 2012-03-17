@@ -1,6 +1,6 @@
 # root
 
-a micro web framework with routing and connect middleware support.
+a super lightweight web framework with routing and connect middleware support.
 it's available through npm:
 
 	npm install root
@@ -32,7 +32,8 @@ root.get(function(request, response) {
 });
 ```
 
-you can choose to group middleware by adding a name
+if you don't want to run a specific middleware on every request you can put it 
+in a collection by providing the name of the collection to use
 
 ``` js
 root.use('auth', function(request, response, next) {
