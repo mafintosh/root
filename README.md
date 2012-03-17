@@ -22,7 +22,7 @@ all routing is supported by the [router](https://github.com/gett/router) module.
 to apply middleware simply use `use`
 
 ``` js
-root.use(function(request, response, next) {
+root.use(function(request, response, next) { // or pass any connect-based middleware
 	request.foo = 'bar!';
 	next();
 });
