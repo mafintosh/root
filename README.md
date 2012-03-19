@@ -19,6 +19,8 @@ root.listen(8080);
 
 all routing is supported by the [router](https://github.com/gett/router) module.
 
+## middleware
+
 to apply middleware simply use `use`
 
 ``` js
@@ -54,4 +56,39 @@ root.auth.get(function(request, response) {
 });
 
 // now visit /, /test and /test?auth
+```
+
+## plugins
+
+root also has a plugin interface for embedding a middleware into a fully featured standalone web framework
+
+``` js
+var myPlugin = root.createPlugin(function(request, response, next) {
+	// my middlware
+	request.pong = Date.now();
+	next();
+});
+```
+
+We can choose to provide additional methods to the response and request
+
+``` js
+myPlugin.response.ping = function() { // let's expand the response with a new method
+	this.end(this.request.pong);
+};
+
+myPlugin.request.host = function() { // we can also add methods to the request
+	return this.headers.host;
+};
+```
+
+The plugin can now be used as a standalone root module
+
+``` js
+var server = myPlugin.createServer();
+
+server.get(function(request, response) {
+	console.log('host is', request.host);
+	response.ping();
+});
 ```
