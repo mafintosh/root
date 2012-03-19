@@ -86,7 +86,6 @@ Root.prototype.use = function(name, fn) {
 	if (!fn) {
 		fn = name;
 	} else {
-		console.log(name, fn);
 		return this.collection(name).use(fn);
 	}
 
@@ -98,7 +97,7 @@ Root.prototype.use = function(name, fn) {
 	return this;
 };
 
-['get','post','put','del','head','all'].forEach(function(method) {
+['get','options','post','put','del','head','all'].forEach(function(method) {
 	Root.prototype[method] = function() {
 		var self = this;
 		var fn = arguments[arguments.length-1];
