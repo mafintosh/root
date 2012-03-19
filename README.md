@@ -58,12 +58,12 @@ root.auth.get(function(request, response) {
 // now visit /, /test and /test?auth
 ```
 
-## plugins
+## extensions
 
-root also has a plugin interface for embedding a middleware into a fully featured standalone web framework
+root also has a extension interface for embedding a middleware into a fully featured standalone web framework
 
 ``` js
-var myPlugin = root.createPlugin(function(request, response, next) {
+var myExtension = root.createExtension(function(request, response, next) {
 	// my middlware
 	request.pong = Date.now();
 	next();
@@ -73,19 +73,19 @@ var myPlugin = root.createPlugin(function(request, response, next) {
 We can choose to provide additional methods to the response and request
 
 ``` js
-myPlugin.response.ping = function() { // let's expand the response with a new method
+myExtension.response.ping = function() { // let's expand the response with a new method
 	this.end(this.request.pong);
 };
 
-myPlugin.request.host = function() { // we can also add methods to the request
+myExtension.request.host = function() { // we can also add methods to the request
 	return this.headers.host;
 };
 ```
 
-The plugin can now be used as a standalone root module
+The extension can now be used as a standalone root module
 
 ``` js
-var server = myPlugin.createServer();
+var server = myExtension.createServer();
 
 server.get(function(request, response) {
 	console.log('host is', request.host);

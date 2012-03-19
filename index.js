@@ -161,4 +161,4 @@ exports.createServer = function() {
 
 	return root;
 };
-exports.createPlugin = plugin(exports);
+exports.createExtension = plugin(exports);
