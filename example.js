@@ -1,5 +1,8 @@
 var root = require('root').createServer('test');
 
+root.use(root.json);
+root.use(root.query);
+
 root.use(function(req, res, next) {
 	req.foo = 42;
 	next();
@@ -10,6 +13,16 @@ root.use(function(req, res, next) {
 });
 root.test.use(function(req, res) {
 	req.foo = 'test';
+});
+
+root.post('/', function(request, response) {
+	response.json({echo:request.json});
+});
+root.get('/query', function(request, response) {
+	response.json(request.query);
+});
+root.get('/err', function(request, response) {
+	response.json(new Error('lol'));
 });
 
 root.get('/', function(request, response) {

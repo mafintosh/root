@@ -5,7 +5,17 @@ var http = require('http');
 var noop = function() {};
 var extend = function(to, from) {
 	Object.keys(from || {}).forEach(function(key) {
-		to[key] = to[key] || from[key];
+		var getter = from.__lookupGetter__(key);
+
+		if (key in to) {
+			return;
+		}
+		if (getter) {
+			to.__defineGetter__(key, getter);
+			return;
+		} 
+
+		to[key] = from[key];
 	});
 
 	return to;
@@ -16,7 +26,7 @@ var plugin = function(from) {
 			return from.createServer.apply(from, arguments).use(fn);
 		};
 
-		fn.createPlugin = plugin(fn);
+		fn.createExtension = plugin(fn);
 		fn.request = {};
 		fn.response = {};
 
@@ -83,6 +93,9 @@ Root.prototype.namespace = function(name, fn) {
 	}));
 };
 Root.prototype.use = function(name, fn) {
+	if (!fn && typeof name === 'string') {
+		return this.collection(name);
+	}
 	if (!fn) {
 		fn = name;
 	} else {
@@ -92,11 +105,12 @@ Root.prototype.use = function(name, fn) {
 	extend(this.request, fn.request);
 	extend(this.response, fn.response);
 
-	this._stack.push(fn);
+	if (typeof fn === 'function') {
+		this._stack.push(fn);	
+	}
 
 	return this;
 };
-
 ['get','options','post','put','del','head','all'].forEach(function(method) {
 	Root.prototype[method] = function() {
 		var self = this;
@@ -120,11 +134,14 @@ Root.prototype.use = function(name, fn) {
 		return this;
 	};
 });
-['listen', 'bind', 'close', 'upgrade'].forEach(function(method) {
+['listen','bind','close','upgrade'].forEach(function(method) {
 	Root.prototype[method] = function() {
 		this.router[method].apply(this.router, arguments);
 		return this;
 	};
+});
+['json','query'].forEach(function(method) {
+	Root.prototype[method] = require('./extensions/'+method);
 });
 
 Root.prototype._middleware = function(request, response, next) {
@@ -138,13 +155,13 @@ Root.prototype._forward = function(root) {
 	});
 };
 
-exports.createServer = function() {
+module.exports = exports = function() {
 	var root = new Root({
 		request:http.IncomingMessage.prototype,
 		response:http.ServerResponse.prototype
 	});
 
-	[].concat(Array.prototype.slice.call(arguments)).forEach(function(item) {
+	[].concat.apply([], Array.prototype.slice.call(arguments)).forEach(function(item) {
 		if (typeof item === 'function') {
 			root.use(item);
 			return;
@@ -161,4 +178,6 @@ exports.createServer = function() {
 
 	return root;
 };
+
+exports.createServer = exports;
 exports.createExtension = plugin(exports);
