@@ -58,6 +58,8 @@ root.auth.get(function(request, response) {
 // now visit /, /test and /test?auth
 ```
 
+you can see the [root.json](https://github.com/mafintosh/root/blob/master/extensions/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/extensions/query.js) middleware for examples on how to write your own.
+
 ## extensions
 
 root also has a extension interface for embedding a middleware into a fully featured standalone web framework
