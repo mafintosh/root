@@ -96,7 +96,7 @@ app.get(function(request, response) {
 });
 ```
 
-## License 
+## license 
 
 (The MIT License)
 
