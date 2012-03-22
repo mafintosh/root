@@ -69,6 +69,7 @@ root allows you to specify a prototype for the request and response to create us
 ``` js
 var myMiddleware = function(request, respone, next) { // we could also just use an empty object literal
 	request.pong = Date.now();
+	next();
 };
 ```
 

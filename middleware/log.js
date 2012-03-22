@@ -1,5 +1,3 @@
-//14:32 01/02/12 [GET] /test/42
-
 var pad = function(num) {
 	return '00'.substr((''+num).length)+num;
 };
@@ -10,6 +8,7 @@ var now = function() {
 		' '+pad(d.getUTCDate())+'/'+pad(d.getUTCMonth()+1)+'/'+pad(d.getUTCFullYear()-2000);
 };
 
-module.exports = function(request, response) {
+module.exports = function(request, response, next) {
 	console.log(now()+' - ['+request.method+'] '+request.url);
+	next();
 };

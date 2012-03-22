@@ -39,20 +39,12 @@ var proton = function(parent) {
 				loop(err);
 				return;
 			}
-			if (next.length === 3) {
-				next(request, response, loop);
-				return;
-			}
 			if (next.length >= 4) {
 				next(err, request, response, loop);
 				return;
 			}
 
-			next(request, response);
-
-			if (stack[i]) {
-				loop();			
-			}
+			next(request, response, loop);
 		};
 
 		// set request prototype
