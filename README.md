@@ -100,7 +100,7 @@ app.get(function(request, response) {
 
 (The MIT License)
 
-Copyright (c) 2012 Mathias Buus MAdsen &lt;mathiasbuus@gmail.com&gt;
+Copyright (c) 2012 Mathias Buus Madsen &lt;mathiasbuus@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
