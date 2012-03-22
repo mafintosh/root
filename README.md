@@ -18,7 +18,7 @@ app.get('/', function(request, response) {
 app.listen(8080);
 ```
 
-all routing is supported by the [router](https://github.com/gett/router) module.
+all routing is supported by the [router](https://github.com/gett/router) module. see more usage examples [here](https://github.com/mafintosh/root/blob/master/examples/)
 
 ## middleware
 
@@ -59,7 +59,7 @@ app.auth.get(function(request, response) {
 // now visit /, /test and /test?auth
 ```
 
-you can see the [root.json](https://github.com/mafintosh/root/blob/master/extensions/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/extensions/query.js) middleware for examples on how to write your own.
+you can see the [root.json](https://github.com/mafintosh/root/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/middleware/query.js) middleware for examples on how to write your own.
 
 ## prototypical middleware
 
