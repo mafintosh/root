@@ -49,7 +49,10 @@ var proton = function(parent) {
 			}
 
 			next(request, response);
-			loop();
+
+			if (stack[i]) {
+				loop();			
+			}
 		};
 
 		// set request prototype
