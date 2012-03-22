@@ -2,6 +2,7 @@ var root = require('../index');
 var app = root();
 
 app.use(root.json);
+app.use(root.log);
 
 app.get(function(request, response) {
 	response.json({hello:'world'});
