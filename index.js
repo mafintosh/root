@@ -3,7 +3,8 @@ var router = require('router');
 var common = require('common');
 
 var METHODS = 'all get post put head del delete options'.split(' ');
-var PROXY = 'close bind listen upgrade'.split(' ');
+var PROXY = 'address close bind listen upgrade'.split(' ');
+var PROXY_EVENTS = 'request close listening bind'.split(' ');
 
 var Collection = common.emitter(function(middleware) {
 	this.middleware = proton(middleware);
@@ -11,7 +12,7 @@ var Collection = common.emitter(function(middleware) {
 
 METHODS.forEach(function(method) {
 	Collection.prototype[method] = function() {
-		var args = [].concat.apply([], arguments);
+		var args = Array.prototype.concat.apply([], arguments);
 		var self = this;	
 		var callback = args.pop();
 		var middleware = this.middleware;
@@ -39,6 +40,7 @@ METHODS.forEach(function(method) {
 
 		first.push(onroute);
 		this.emit('mount', method, first);
+
 		return this;
 	};
 });
@@ -55,9 +57,6 @@ var Root = common.emitter(function() {
 			self.use(self.route);
 		}
 	});
-	this.router.on('request', function(request, response) {
-		self.emit('request', request, response);
-	});
 	this.on('request', function(request, response) {
 		self.middleware(request, response, function(err) {
 			if (err) {
@@ -73,6 +72,12 @@ var Root = common.emitter(function() {
 		if (name === 'upgrade') {
 			self.router.on(name, fn);
 		}
+	});
+
+	PROXY_EVENTS.forEach(function(name) {
+		self.router.on(name, function(a,b) {
+			self.emit(name, a, b);
+		});
 	});
 
 	this._main = new Collection();
@@ -124,9 +129,9 @@ METHODS.forEach(function(method) {
 });
 PROXY.forEach(function(method) {
 	Root.prototype[method] = function() {
-		this.router[method].apply(this.router, arguments);
+		var val = this.router[method].apply(this.router, arguments);
 
-		return this;
+		return val === this.router ? this : val;
 	};	
 });
 
