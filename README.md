@@ -39,8 +39,9 @@ if you don't want to run a specific middleware on every request you can put it
 in a collection by providing the name of the collection to use
 
 ``` js
+app.use(root.query);
 app.use('auth', function(request, response, next) {
-	if (request.url.indexOf('?auth') === -1) {
+	if (!request.query.auth) {
 		response.writeHead(403);
 		response.end();
 		return;
@@ -56,7 +57,7 @@ app.auth.get(function(request, response) {
 	response.end('hello mr auth');
 });
 
-// now visit /, /test and /test?auth
+// now visit /, /test and /test?auth=1
 ```
 
 you can see the [root.json](https://github.com/mafintosh/root/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/middleware/query.js) middleware for examples on how to write your own.
