@@ -32,6 +32,9 @@ fn.request.__defineGetter__('json', function() {
 
 fn.response = {};
 fn.response.json = function(status, doc) {
+	if (typeof status === 'number' && /^[^23]/.test(status) && (!doc || typeof doc === 'string')) {
+		doc = {status:status, message:(doc || 'whoops')};
+	}
 	if (isError(status)) {
 		var statusCode = status.status || status.statusCode || 500;
 
