@@ -87,24 +87,30 @@ Root.prototype.boot = function() {
 	var self = this;
 	var boot = new Root();
 
+	var route = function(request, response) {
+		boot.emit('request', request, response);
+	};
+	
 	Array.prototype.concat.apply([], arguments).forEach(function(pattern) {
-		pattern = pattern.match(/^(?:(?:http|https):\/\/)?([^\/:]*)(?:\:\d+)?(.*)$/) || [];
+		var fn = typeof pattern === 'function' && pattern;
 
-		var host = new RegExp('^'+(pattern[1] || '*').replace(/\./g, '\\.').replace(/^\*$/, '.+?').replace(/\*/g, '[^.]+')+'(:|$)', 'i');
-		var path = (pattern[2] || '').replace(/\/$/, '').toLowerCase();
+		if (!fn) {
+			pattern = pattern.match(/^(?:(?:http|https):\/\/)?([^\/:]*)(?:\:\d+)?(.*)$/) || [];
+
+			var host = new RegExp('^'+(pattern[1] || '*').replace(/\./g, '\\.').replace(/^\*$/, '.+?').replace(/\*/g, '[^.]+')+'(:|$)', 'i');
+			var path = (pattern[2] || '').replace(/\/$/, '').toLowerCase();
+
+			fn = function(request, response, boot, next) {
+				if (!host.test(request.headers.host || '')) return next();
+				if (request.url.substring(0, path.length).toLowerCase() !== path) return next();
+
+				request.url = request.url.substring(path.length);
+				boot(request, response);
+			};
+		}
 
 		self.use(function(request, response, next) {
-			if (!host.test(request.headers.host || '')) {
-				next();
-				return;
-			}
-			if (request.url.substring(0, path.length).toLowerCase() !== path) {
-				next();
-				return;
-			}
-
-			request.url = request.url.substring(path.length);
-			boot.emit('request', request, response);
+			fn(request, response, route, next);
 		});
 	});
 
@@ -137,9 +143,7 @@ PROXY.forEach(function(method) {
 
 [Root, Collection].forEach(function(Proto) {
 	var collection = function(self, name) {
-		if (self[name]) {
-			return self[name];
-		}
+		if (self[name]) return self[name];
 
 		var col = self[name] = new Collection(self.middleware);
 
@@ -154,12 +158,8 @@ PROXY.forEach(function(method) {
 		return this.middleware.using(fn);
 	};
 	Proto.prototype.use = function(fn, other) {
-		if (!fn) {
-			return this;
-		}
-		if (typeof fn === 'string') {
-			return collection(this, fn).use(other);
-		}
+		if (!fn) return this;
+		if (typeof fn === 'string') return collection(this, fn).use(other);
 
 		this.middleware.use(fn);
 
