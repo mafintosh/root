@@ -4,7 +4,7 @@ var common = require('common');
 
 var METHODS = 'all get post put head del delete options'.split(' ');
 var PROXY = 'address close bind listen upgrade'.split(' ');
-var PROXY_EVENTS = 'request close listening bind'.split(' ');
+var PROXY_EVENTS = 'request close listening bind error'.split(' ');
 
 var Collection = common.emitter(function(middleware) {
 	this.middleware = proton(middleware);
@@ -67,7 +67,7 @@ var Root = common.emitter(function() {
 				response.end();
 			}
 		});
-	});
+	});	
 	this.on('newListener', function(name, fn) {
 		if (name === 'upgrade') {
 			self.router.on(name, fn);
