@@ -97,6 +97,18 @@ app.get(function(request, response) {
 });
 ```
 
+There is also a shorthand syntax for doing this through the methods `fn` and `getter`:
+
+``` js
+app.fn('response.ping', function() {
+	return this.request.pong;
+});
+app.getter('request.host', function() {
+	return this.headers.host;
+});
+```
+
+
 ## license 
 
 (The MIT License)

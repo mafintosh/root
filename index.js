@@ -83,6 +83,31 @@ var Root = common.emitter(function() {
 	this._main = new Collection();
 });
 
+var shorthandMiddleware = function(self, name, fn) {
+	var map = {};
+
+	name = name.split('.');
+
+	if (name.length !== 2) {
+		return self;
+	}
+
+	var sub = map[name[0]] = {};
+
+	fn(sub, name[1]);
+	return self.use(map);
+};
+
+Root.prototype.getter = function(name, fn) {
+	return shorthandMiddleware(this, name, function(proto, getter) {
+		proto.__defineGetter__(getter, fn);
+	});
+};
+Root.prototype.fn = function(name, fn) {
+	return shorthandMiddleware(this, name, function(proto, method) {
+		proto[method] = fn;
+	});
+};
 Root.prototype.boot = function() {
 	var self = this;
 	var boot = new Root();
