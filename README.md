@@ -73,7 +73,7 @@ var myMiddleware = function(request, respone, next) { // we could also just use 
 };
 ```
 
-We can choose to provide additional methods to the response and request
+We can choose to expand the request and response with additional methods
 
 ``` js
 myMiddleware.response = {};
