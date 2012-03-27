@@ -50,7 +50,7 @@ fn.response.json = function(status, doc) {
 	doc = doc === undefined ? null : doc;
 	doc = JSON.stringify(doc);
 
-	this.setHeader('Content-Type', 'application/json');
+	this.setHeader('Content-Type', 'application/json; charset=utf-8');
 	this.setHeader('Content-Length', Buffer.byteLength(doc));
 	this.end(doc);
 };
