@@ -1,6 +1,6 @@
 # root
 
-a super lightweight web framework with routing and connect middleware support.
+a super lightweight web framework with routing and connect and [protein](https://github.com/mafintosh/protein) middleware support.
 it's available through npm:
 
 	npm install root
@@ -60,11 +60,12 @@ app.auth.get(function(request, response) {
 // now visit /, /test and /test?auth=1
 ```
 
-you can see the [root.json](https://github.com/mafintosh/root/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/middleware/query.js) middleware for examples on how to write your own.
+you can see the [root.json](https://github.com/mafintosh/protein/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/protein/master/middleware/query.js) middleware for examples on how to write your own.
 
 ## prototypical middleware
 
-root allows you to specify a prototype for the request and response to create useful and ultra fast middleware methods
+root allows you to specify a prototype for the request and response to create useful and ultra fast middleware methods.
+it does this by using the [protein](https://github.com/mafintosh/protein) module
 
 ``` js
 var myMiddleware = function(request, respone, next) { // we could also just use an empty object literal

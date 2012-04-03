@@ -5,7 +5,6 @@ app.use(root.json);
 app.use(root.log);
 
 app.get('/', function(request, response) {
-	console.log('??')
 	response.json({hello:'world'});
 });
 app.post(function(request, response) {

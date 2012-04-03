@@ -1,13 +1,14 @@
-var proton = require('./proton');
+var protein = require('protein');
 var router = require('router');
 var common = require('common');
 
-var METHODS = 'all get post put head del delete options'.split(' ');
-var PROXY = 'address close bind listen upgrade'.split(' ');
-var PROXY_EVENTS = 'request close listening bind error'.split(' ');
+var METHODS       = 'all get post put head del delete options'.split(' ');
+var PROXY_PROTEIN = 'fn getter setter'.split(' ');
+var PROXY_ROUTER  = 'address close bind listen upgrade'.split(' ');
+var PROXY_EVENTS  = 'request close listening bind error'.split(' ');
 
 var Collection = common.emitter(function(middleware) {
-	this.middleware = proton(middleware);
+	this.middleware = protein(middleware);
 });
 
 METHODS.forEach(function(method) {
@@ -46,7 +47,7 @@ METHODS.forEach(function(method) {
 });
 
 var Root = common.emitter(function() {
-	this.middleware = proton();
+	this.middleware = protein();
 	this.router = router();
 	this.route = this.router.detach();
 
@@ -83,31 +84,6 @@ var Root = common.emitter(function() {
 	this._main = new Collection();
 });
 
-var shorthandMiddleware = function(self, name, fn) {
-	var map = {};
-
-	name = name.split('.');
-
-	if (name.length !== 2) {
-		return self;
-	}
-
-	var sub = map[name[0]] = {};
-
-	fn(sub, name[1]);
-	return self.use(map);
-};
-
-Root.prototype.getter = function(name, fn) {
-	return shorthandMiddleware(this, name, function(proto, getter) {
-		proto.__defineGetter__(getter, fn);
-	});
-};
-Root.prototype.fn = function(name, fn) {
-	return shorthandMiddleware(this, name, function(proto, method) {
-		proto[method] = fn;
-	});
-};
 Root.prototype.boot = function() {
 	var self = this;
 	var boot = new Root();
@@ -158,7 +134,7 @@ METHODS.forEach(function(method) {
 		return this;
 	};
 });
-PROXY.forEach(function(method) {
+PROXY_ROUTER.forEach(function(method) {
 	Root.prototype[method] = function() {
 		var val = this.router[method].apply(this.router, arguments);
 
@@ -190,6 +166,12 @@ PROXY.forEach(function(method) {
 
 		return this;
 	};
+	PROXY_PROTEIN.forEach(function(method) {
+		Proto.prototype[method] = function(name, fn) {
+			this.middleware[method](name, fn);
+			return this;
+		};
+	});
 });
 
 module.exports = exports = function() {
@@ -202,6 +184,6 @@ module.exports = exports = function() {
 	return server;
 };
 
-require('fs').readdirSync(__dirname+'/middleware').forEach(function(name) {
-	exports[name.replace(/\.js$/i, '')] = require('./middleware/'+name);
+Object.keys(protein).forEach(function(name) {
+	exports[name] = protein[name];
 });
