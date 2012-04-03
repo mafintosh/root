@@ -27,3 +27,5 @@ fn.request = {};
 fn.request.__defineGetter__('form', function() {
 	return this._form || (this._form = parse(this.body));
 });
+
+module.exports = fn;
