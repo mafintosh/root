@@ -84,7 +84,7 @@ var Root = common.emitter(function() {
 	this._main = new Collection();
 });
 
-Root.prototype.boot = function() {
+Root.prototype.fork = function() {
 	var self = this;
 	var boot = new Root();
 

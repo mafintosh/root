@@ -1,8 +1,8 @@
 var root = require('../index');
 var app = root();
 
-var m = app.boot('/m');
-var ip = app.boot('127.0.0.1');
+var m = app.fork('/m');
+var ip = app.fork('127.0.0.1');
 
 m.get(function(request, response) {
 	response.end('i am /m');
