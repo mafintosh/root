@@ -184,6 +184,6 @@ module.exports = exports = function() {
 	return server;
 };
 
-Object.keys(protein).forEach(function(name) {
-	exports[name] = protein[name];
+require('fs').readdirSync(__dirname+'/middleware').forEach(function(name) {
+	exports[name] = require('./middleware/'+name);
 });
