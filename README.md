@@ -60,7 +60,7 @@ app.auth.get(function(request, response) {
 // now visit /, /test and /test?auth=1
 ```
 
-you can see the [root.json](https://github.com/mafintosh/protein/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/protein/master/middleware/query.js) middleware for examples on how to write your own.
+you can see the [root.json](https://github.com/mafintosh/root/blob/master/middleware/json.js) and [root.query](https://github.com/mafintosh/root/blob/master/middleware/query.js) middleware for examples on how to write your own.
 
 ## prototypical middleware
 
