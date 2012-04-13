@@ -185,5 +185,5 @@ module.exports = exports = function() {
 };
 
 require('fs').readdirSync(__dirname+'/middleware').forEach(function(name) {
-	exports[name] = require('./middleware/'+name);
+	exports[name.replace(/\.js$/i, '')] = require('./middleware/'+name);
 });
