@@ -8,7 +8,7 @@ var parse = function(body) {
 };
 
 var fn = function(request, response, next) {
-	if (request.body || (request.method === 'GET' || request.method === 'HEAD')) {
+	if (request.body !== undefined || (request.method === 'GET' || request.method === 'HEAD')) {
 		next();
 		return;
 	}
