@@ -59,15 +59,7 @@ var Root = common.emitter(function() {
 		}
 	});
 	this.on('request', function(request, response) {
-		self.middleware(request, response, function(err) {
-			if (err) {
-				response.writeHead(500);
-				response.end(err.stack);
-			} else {
-				response.writeHead(404);
-				response.end();
-			}
-		});
+		self.middleware(request, response);
 	});	
 	this.on('newListener', function(name, fn) {
 		if (name === 'upgrade') {
