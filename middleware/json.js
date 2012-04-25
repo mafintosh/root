@@ -1,38 +1,17 @@
 var isError = require('util').isError;
-var parse = function(body) {
+var body = require('./body');
+
+var fn = body('json', function(data) {
 	try {
-		return JSON.parse(body || '{}') || {};
+		return JSON.parse(data || '{}') || {};
 	} catch (err) {
 		return {};
 	}
-};
-
-var fn = function(request, response, next) {
-	response.json = response.json.bind(response);
-
-	if (request.body !== undefined || (request.method === 'GET' || request.method === 'HEAD')) {
-		next();
-		return;
-	}
-
-	request.body = '';
-	request.setEncoding('utf-8');
-	request.on('data', function(data) {
-		request.body += data;
-	});
-	request.on('end', function() {
-		next();
-	});
-};
-
-fn.request = {};
-fn.request.__defineGetter__('json', function() {
-	return this._json || (this._json = parse(this.body));
 });
 
 fn.response = {};
 fn.response.json = function(status, doc) {
-	if (typeof status === 'number' && /^[^23]/.test(status) && (!doc || typeof doc === 'string')) {
+	if (typeof status === 'number' && status >= 400 && (!doc || typeof doc === 'string')) {
 		doc = {status:status, message:(doc || 'whoops')};
 	}
 	if (isError(status)) {
