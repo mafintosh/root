@@ -18,7 +18,7 @@ app.get('/', function(request, response) {
 app.listen(8080);
 ```
 
-all routing is supported by the [router](https://github.com/gett/router) module. see more usage examples [here](https://github.com/mafintosh/root/blob/master/examples/)
+all routing is supported by the [router](https://github.com/gett/router) module.
 
 ## middleware
 
@@ -35,12 +35,11 @@ app.get(function(request, response) {
 });
 ```
 
-if you don't want to run a specific middleware on every request you can put it 
-in a collection by providing the name of the collection to use
+if you don't want to run a specific middleware on every request you can put it in a branch
 
 ``` js
 app.use(root.query);
-app.use('auth', function(request, response, next) {
+app.branch('auth', function(request, response, next) {
 	if (!request.query.auth) {
 		response.writeHead(403);
 		response.end();
