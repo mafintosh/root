@@ -38,8 +38,10 @@ app.get(function(request, response) {
 if you don't want to run a specific middleware on every request you can put it in a branch
 
 ``` js
+var app = root('auth');
+
 app.use(root.query);
-app.branch('auth', function(request, response, next) {
+app.auth.use(function(request, response, next) {
 	if (!request.query.auth) {
 		response.writeHead(403);
 		response.end();
