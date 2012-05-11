@@ -1,18 +1,13 @@
 var isError = require('util').isError;
 var body = require('./body');
 
-var parse = body('json', function(data) {
+var fn = body('json', function(data) {
 	try {
 		return JSON.parse(data || '{}') || {};
 	} catch (err) {
 		return {};
 	}
 });
-
-var fn = function(request, response, next) {
-	response.json = response.json.bind(response);
-	parse(request, response, next);
-};
 
 fn.response = {};
 fn.response.json = function(status, doc) {
