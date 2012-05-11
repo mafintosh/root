@@ -1,8 +1,6 @@
 module.exports = function(name, parse) {
 	var cache = '_'+name;
 	var fn = function(request, response, next) {
-		response.json = response.json.bind(response);
-
 		if (request.body !== undefined || (request.method === 'GET' || request.method === 'HEAD')) {
 			next();
 			return;
