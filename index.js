@@ -60,6 +60,16 @@ var Root = common.emitter(function() {
 	});
 });
 
+Root.prototype.error = function(fn) {
+	var self = this;
+
+	this.once('bind', function() {
+		self.use(function(err, req, res, next) {
+			fn(err, req, res, next);
+		});
+	});
+	return this;
+};
 Root.prototype.fork = function() {
 	var self = this;
 	var boot = new Root();
@@ -104,7 +114,13 @@ METHODS.forEach(function(method) {
 	};
 });
 PROXY_ROUTER.forEach(function(method) {
+	var binding = method === 'listen' || method === 'bind';
+
 	Root.prototype[method] = function() {
+		if (binding) {
+			this.emit('bind');
+		}
+
 		var val = this.router[method].apply(this.router, arguments);
 
 		return val === this.router ? this : val;
