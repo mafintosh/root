@@ -45,6 +45,7 @@ var Root = common.emitter(function() {
 		}
 	});
 	this.on('request', function(req, res) {
+		self.emit('middleware');
 		self.middleware(req, res);
 	});	
 	this.on('newListener', function(name, fn) {
@@ -63,7 +64,7 @@ var Root = common.emitter(function() {
 Root.prototype.error = function(fn) {
 	var self = this;
 
-	this.once('bind', function() {
+	this.once('middleware', function() {
 		self.use(function(err, req, res, next) {
 			fn(err, req, res, next);
 		});
@@ -114,13 +115,7 @@ METHODS.forEach(function(method) {
 	};
 });
 PROXY_ROUTER.forEach(function(method) {
-	var binding = method === 'listen' || method === 'bind';
-
 	Root.prototype[method] = function() {
-		if (binding) {
-			this.emit('bind');
-		}
-
 		var val = this.router[method].apply(this.router, arguments);
 
 		return val === this.router ? this : val;
