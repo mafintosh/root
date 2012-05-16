@@ -61,11 +61,16 @@ var Root = common.emitter(function() {
 	});
 });
 
-Root.prototype.error = function(fn) {
+Root.prototype.error = function(fn) { // experimental
 	var self = this;
 
 	this.once('middleware', function() {
 		self.use(function(err, req, res, next) {
+			if (!err) {
+				err = new Error(req.url+' not found');
+				err.statusCode = 404;
+			}			
+			err.statusCode = err.statusCode || 500;
 			fn(err, req, res, next);
 		});
 	});
