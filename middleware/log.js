@@ -1,6 +1,6 @@
 var RESERVED = '__$RESERVED$__';
 var logger = function(pattern) {
-	pattern = pattern || ':request.method :request.url :response.statusCode';
+	pattern = pattern || ':response.statusCode :request.method :request.url';
 
 	var tokens = [];
 	var compiled = pattern.replace(/\:([\w\-\.]+(?:\[[\w\-\.]+\])?)/g, function(_, token) {
