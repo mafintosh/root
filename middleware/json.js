@@ -12,12 +12,12 @@ var fn = body('json', function(data) {
 fn.response = {};
 fn.response.json = function(status, doc) {
 	if (typeof status === 'number' && status >= 400 && (!doc || typeof doc === 'string')) {
-		doc = {status:status, message:(doc || 'whoops')};
+		doc = {statusCode:status, message:(doc || 'something bad happened')};
 	}
 	if (isError(status)) {
 		var statusCode = status.status || status.statusCode || 500;
 
-		this.json(statusCode, {status:statusCode, message:status.message});
+		this.json(statusCode, {statusCode:statusCode, message:status.message});
 		return;
 	}
 	if (doc) {
