@@ -1,6 +1,6 @@
 {
  "name":"root",
- "version":"0.3.11",
+ "version":"0.3.12",
  "dependencies": {"common":">=0.2.0", "router":">=0.5.x", "protein":"0.3.x"},
  "repository": "git://github.com/mafintosh/root",
  "description":"a super lightweight web framework featuring connect middleware support and routing",
