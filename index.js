@@ -39,7 +39,7 @@ var Root = common.emitter(function() {
 
 	var self = this;
 
-	this.router.head(function() {
+	this.router.head(function(req, res) {
 		var end = res.end;
 
 		req.method = 'GET';
