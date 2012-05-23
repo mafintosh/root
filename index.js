@@ -39,6 +39,16 @@ var Root = common.emitter(function() {
 
 	var self = this;
 
+	this.router.head(function() {
+		var end = res.end;
+
+		req.method = 'GET';
+		res.write = res.end = function() {
+			res.write = res.end = function() {};
+			end.call(res);
+		};	
+		self.route(req, res);
+	});
 	this.router.once('mount', function() {
 		if (!self.using(self.route)) {
 			self.use(self.route);
