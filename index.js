@@ -8,6 +8,9 @@ var PROXY_PROTEIN = 'fn getter setter'.split(' ');
 var PROXY_ROUTER  = 'address close bind listen upgrade'.split(' ');
 var PROXY_EVENTS  = 'request close listening bind error'.split(' ');
 
+var defunc = function(fn) {
+	return {request:fn.request, response:fn.response};
+};
 var reduce = function(args, middleware) {
 	var fns = [];
 
@@ -113,7 +116,7 @@ Root.prototype.fork = function() {
 		});
 	});
 
-	return boot;
+	return boot.use(defunc(this.middleware));
 };
 METHODS.forEach(function(method) {
 	Root.prototype[method] = function() {
