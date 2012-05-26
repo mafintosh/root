@@ -84,12 +84,13 @@ Root.prototype.error = function(fn) { // experimental
 };
 Root.prototype.fork = function() {
 	var self = this;
-	var boot = new Root();
+	var args = Array.prototype.concat.apply([], arguments);
+	var boot = typeof args[args.length-1] === 'object' ? args.pop() : new Root();
 	var route = function(req, res) {
 		boot.emit('request', req, res);
 	};
 	
-	Array.prototype.concat.apply([], arguments).forEach(function(pattern) {
+	args.forEach(function(pattern) {
 		var fn = typeof pattern === 'function' && pattern;
 
 		if (!fn) {
