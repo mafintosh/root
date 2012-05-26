@@ -209,6 +209,12 @@ METHODS.forEach(function(method) {
 		return this.middleware.using(fn);
 	};
 	Proto.prototype.use = function(route, fn) {
+		if (!fn) return this.use(null, route);
+		if (fn instanceof Root) {
+			fn.emit('middleware');
+			fn.use(defunc(this.middleware));
+			fn = fn.middleware;
+		}
 		this.middleware.use(route, fn);
 		return this;
 	};
@@ -221,14 +227,14 @@ METHODS.forEach(function(method) {
 });
 
 module.exports = function() {
-	var server = new Root();
+	var app = new Root();
 
 	Array.prototype.concat.apply([], arguments).forEach(function(middleware) {
-		if (typeof middleware === 'string') return server.branch(middleware);
-		server.use(middleware);
+		if (typeof middleware === 'string') return app.branch(middleware);
+		app.use(middleware);
 	});
 
-	return server;
+	return app;
 };
 
 MIDDLEWARE.forEach(function(name) {
