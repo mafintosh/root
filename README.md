@@ -20,7 +20,7 @@ app.listen(8080);
 
 all routing is supported by the [router](https://github.com/gett/router) module.
 
-## middleware
+## Middleware
 
 to apply middleware simply use `use`
 
