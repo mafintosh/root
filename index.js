@@ -1,5 +1,6 @@
+var cluster = require('cluster');
 var protein = require('protein');
-var router = require('router');
+var router  = require('router');
 
 var METHODS       = 'all get post put head del delete options'.split(' ');
 var MIDDLEWARE    = 'json query log body'.split(' ');
@@ -158,8 +159,19 @@ Root.prototype.listen = function(server, options, callback) {
 
 	if (reading) return this;
 	if (server === null || typeof server !== 'object') {
+		var env = process.env;
+		var args = options.host ? [bind, options.host] : [bind];
+
 		server = options.key ? require('https').createServer(options) : require('http').createServer();
-		server.listen.apply(server, options.host ? [bind, options.host] : [bind]);
+		if (!bind && cluster.isWorker) { // HACK - we wanna to force a random port from net by faking us being master
+			cluster.isWorker = false;
+			process.env = {};
+			server.listen.apply(server, args);
+			cluster.isWorker = true;
+			process.env = env;
+		} else {
+			server.listen.apply(server, args);
+		}
 	}
 
 	server.on('listening', function() {
