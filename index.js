@@ -57,10 +57,7 @@ var Root = function() {
 		req.method = 'GET';
 		res.write = res.end = function() {
 			res.write = res.end = res.destroy = function() {};
-			end.call(res, function() {
-				if (!req.socket) return;
-				req.destroy();
-			});
+			end.call(res);
 		};	
 		self.route(req, res, next);
 	});
