@@ -55,10 +55,14 @@ var Root = function() {
 		var end = res.end;
 
 		req.method = 'GET';
-		res.write = res.end = function() {
-			res.write = res.end = res.destroy = function() {};
+		res.end = function() {
+			res.write = res.end = res.destroy = noop;
 			end.call(res);
 		};	
+		res.write = function() {
+			res.end();
+			req.emit('close');
+		};
 		self.route(req, res, next);
 	});
 	this.route.onmount = once(function() {
