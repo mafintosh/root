@@ -20,6 +20,18 @@ var once = function(fn) {
 		fn(a,b);
 	};
 };
+var network = function() {
+	var faces = require('os').networkInterfaces();
+
+	for (var i in faces) {
+		for (var j = 0; j < faces[i].length; j++) {
+			if (faces[i][j].family === 'IPv4' && !faces[i][j].internal) {
+				return faces[i][j].address;
+			}
+		}
+	}
+	return '127.0.0.1';
+};
 var reduce = function(args, middleware) {
 	var fns = [];
 
@@ -183,7 +195,7 @@ Root.prototype.listen = function(server, options, callback) {
 			self.emit('listening');
 		}
 		self.once('bind', callback);
-		self.emit('bind', server.address().port, server);
+		self.emit('bind', network()+':'+server.address().port, server);
 	});
 	server.on('error', function(err) {
 		self.emit('error', err);
