@@ -20,6 +20,22 @@ var once = function(fn) {
 		fn(a,b);
 	};
 };
+var head = function(req, res) {
+	var end = res.end;
+
+	req.method = 'GET';
+	res.end = function() {
+		res.write = res.end = res.destroy = req.destroy = noop;
+		end.call(res);
+	};	
+	res.write = function() {
+		if (!res.writable) return;
+		res.writable = false;
+		res.end();
+		req.emit('close');
+		res.emit('close');
+	};
+};
 var network = function() {
 	var faces = require('os').networkInterfaces();
 
@@ -64,17 +80,7 @@ var Root = function() {
 	this.middleware = protein();
 	this.route = router();
 	this.route.head(function(req, res, next) { // experimental
-		var end = res.end;
-
-		req.method = 'GET';
-		res.end = function() {
-			res.write = res.end = res.destroy = noop;
-			end.call(res);
-		};	
-		res.write = function() {
-			res.end();
-			req.emit('close');
-		};
+		head(req, res);
 		self.route(req, res, next);
 	});
 	this.route.onmount = once(function() {
