@@ -1,9 +1,9 @@
 {
  "name":"root",
- "version":"0.4.6",
- "dependencies": {"router":">=0.6.x", "protein":"0.3.x"},
+ "version":"0.5.0",
+ "dependencies": {"murl":">=0.1.x", "protein":"0.4.x"},
  "repository": "git://github.com/mafintosh/root",
- "description":"a super lightweight web framework featuring connect middleware support and routing",
- "keywords": ["lightweight", "web", "routing", "middleware", "connect"],
+ "description":"a super lightweight web framework featuring prototype mixin support and routing",
+ "keywords": ["lightweight", "web", "routing", "mixin", "http"],
  "author": "Mathias Buus Madsen <mathiasbuus@gmail.com>"
 }
