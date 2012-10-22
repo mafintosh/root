@@ -81,11 +81,14 @@ var localAddress = function() {
 var listen = function(server, port) { // uses a hack to avoid cluster random port sharing
 	if (port) return server.listen(port);
 	var env = process.env;
-	require('cluster').isWorker = false;
+	var cluster = require('cluster');
+	if (cluster.isMaster) return server.listen(0);
+
+	cluster.isWorker = false;
 	process.env = {};
 	server.listen(0);
 	process.env = env;
-	require('cluster').isWorker = true;
+	cluster.isWorker = true;
 };
 
 Root.prototype.listen = function(port, options, callback) {
