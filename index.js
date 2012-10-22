@@ -68,27 +68,46 @@ Root.prototype.error = function(pattern, fn) {
 var toBuffer = function(data) {
 	return typeof data === 'string' ? require('fs').readFileSync(data) : data;
 };
+var localAddress = function() {
+	var faces = require('os').networkInterfaces();
+
+	for (var i in faces) {
+		for (var j = 0; j < faces[i].length; j++) {
+			if (faces[i][j].family === 'IPv4' && !faces[i][j].internal) return faces[i][j].address;
+		}
+	}
+	return '127.0.0.1';
+};
+var listen = function(server, port) { // uses a hack to avoid cluster random port sharing
+	if (port) return server.listen(port);
+	var env = process.env;
+	require('cluster').isWorker = false;
+	process.env = {};
+	server.listen(0);
+	process.env = env;
+	require('cluster').isWorker = true;
+};
 
 Root.prototype.listen = function(port, options, callback) {
+	if (typeof port !== 'number') return this.listen(0, port, options);
 	if (typeof options === 'function') return this.listen(port, undefined, options);
 
 	options = options || {};
 	options.key = toBuffer(options.key);
 	options.cert = toBuffer(options.cert);
 
+	if (callback) {
+		this.once('bind', callback);
+	}
+
 	var server = options.cert && options.key ? require('https').createServer(options) : require('http').createServer();
 	var first = !this.servers.length;
 	var self = this;
 
 	server.on('listening', function() {
-		self.emit('bind', server);
-
-		if (first) {
-			self.emit('listening');
-		}
-		if (callback) {
-			callback(server.address());
-		}
+		self.emit('bind', localAddress()+':'+server.address().port, server);
+		if (!first) return;
+		self.emit('listening');
 	});
 	server.on('request', function(request, response) {
 		self.emit('request', request, response);
@@ -104,7 +123,7 @@ Root.prototype.listen = function(port, options, callback) {
 		});
 	});
 
-	server.listen(port);
+	listen(server, port);
 	this.servers.push(server);
 	return this;
 };
