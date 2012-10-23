@@ -14,7 +14,11 @@ var tests = fs.readdirSync(__dirname).filter(function(file) {
 
 var cnt = 0;
 var all = tests.length;
+var wid = 1+2*(''+all).length;
 
+var min = function(str) {
+	return str+Array(wid+1).join(' ').substr(str.length);
+}
 var loop = function() {
 	var next = tests.shift();
 
@@ -24,12 +28,12 @@ var loop = function() {
 		cnt++;
 
 		if (err) {
-			console.error('\033[31m[err]\033[39m '+cnt+'/'+all+' - '+next);
+			console.error('\033[31m[err]\033[39m '+min(cnt+'/'+all)+' - '+next);
 			console.error('\n      '+(''+err.stack).split('\n').join('\n      ')+'\n');
 			return process.exit(1);
 		}
 
-		console.log('\033[32m[ok]\033[39m  '+cnt+'/'+all+' - '+next);
+		console.log('\033[32m[ok]\033[39m  '+min(cnt+'/'+all)+' - '+next);
 		setTimeout(loop, 100);
 	});
 };
