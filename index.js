@@ -92,7 +92,7 @@ var listen = function(server, port) { // uses a hack to avoid cluster random por
 };
 
 Root.prototype.listen = function(port, options, callback) {
-	if (typeof port !== 'number') return this.listen(0, port, options);
+	if (typeof port !== 'number' && typeof port !== 'string') return this.listen(0, port, options);
 	if (typeof options === 'function') return this.listen(port, undefined, options);
 
 	options = options || {};
