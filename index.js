@@ -149,7 +149,7 @@ Root.prototype.close = function(callback) {
 	return this;
 };
 
-var normalizeURL = function(url) {
+var normalizeURL = function(url) { // we cant use path.normalize as its platform dependent
 	var skip = 0;
 	return url.split('/').reduceRight(function(result, part, i) {
 		if (result === '..') {
