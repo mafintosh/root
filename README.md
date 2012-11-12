@@ -62,10 +62,10 @@ app.get('/test', function(req, res) {
 
 Before routing an incoming url it is first decoded and normalized
 
-* `/../../` becomes `/`
-* `/foo/bar/../baz` becomes `/foo/baz`
-* `/foo%20bar` becomes `/foo bar`
-* `/foo%2fbar` becomes `/foo/bar`
+* `/../../` ⇨ `/`
+* `/foo/bar/../baz` ⇨ `/foo/baz`
+* `/foo%20bar` ⇨ `/foo bar`
+* `/foo%2fbar` ⇨ `/foo/bar`
 
 This basicly means that you don't need to worry about `/..` attacks when serving files or similar.
 
