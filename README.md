@@ -58,7 +58,16 @@ app.get('/test', function(req, res) {
 });
 ```
 
-All captured parameters are automatically decoded and normalized so you do not need to worry about `/..` attacks.
+## URL normalization
+
+Before routing an incoming url it is first decoded and normalized
+
+* `/../../` becomes `/`
+* `/foo/bar/../baz` becomes `/foo/baz`
+* `/foo%20bar` becomes `/foo bar`
+* `/foo%2fbar` becomes `/foo/bar`
+
+This basicly means that you don't need to worry about `/..` attacks when serving files or similar.
 
 ## Error handling
 
