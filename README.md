@@ -58,6 +58,8 @@ app.get('/test', function(req, res) {
 });
 ```
 
+All captured parameters are automatically decoded and normalized so you do not need to worry about `/..` attacks.
+
 ## Error handling
 
 You can specify an error handler for a specific error code by using the `error` function

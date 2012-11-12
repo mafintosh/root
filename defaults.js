@@ -42,9 +42,6 @@ var parseURL = function(request) {
 };
 
 module.exports = function(app) {
-	app.use('request.pathname', {getter:true}, function() {
-		return parseURL(this).pathname;
-	});
 	app.use('request.query', {getter:true}, function() {
 		return parseURL(this).query;
 	});

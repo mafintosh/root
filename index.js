@@ -130,6 +130,7 @@ Root.prototype.listen = function(port, options, callback) {
 	this.servers.push(server);
 	return this;
 };
+
 Root.prototype.close = function(callback) {
 	var waiting = this.servers.length;
 	var self = this;
@@ -148,6 +149,25 @@ Root.prototype.close = function(callback) {
 	return this;
 };
 
+var normalizeURL = function(url) {
+	var skip = 0;
+	return url.split('/').reduceRight(function(result, part, i) {
+		if (result === '..') {
+			skip++;
+			result = '';
+		}
+		if (part === '..' && i) {
+			skip++;
+			return result;
+		}
+		if (skip && i) {
+			skip--;
+			return result;
+		}
+		return part+'/'+result;
+	});
+};
+
 Root.prototype.route = function(request, response, callback) {
 	this.emit('route', request, response);
 
@@ -155,6 +175,14 @@ Root.prototype.route = function(request, response, callback) {
 	var entries = this.routes[request.method];
 	var index = request.url.indexOf('?');
 	var url = index === -1 ? request.url : request.url.substring(0, index);
+
+	try {
+		url = decodeURIComponent(url);
+	} catch (err) {
+		return response.error(400, 'url is malformed');
+	}
+
+	url = url.indexOf('/..') === -1 ? url : normalizeURL(url);
 
 	callback = callback || function(err, message) {
 		if (err) return response.error(err, message);
@@ -189,7 +217,7 @@ var rewriter = function(app, pattern, fn) {
 
 	return function(request, response, next) {
 		var index = request.url.indexOf('?');
-		request.url = pattern(request.params) + (index === -1 ? '' : request.url.substring(index));
+		request.url = encodeURI(pattern(request.params)) + (index === -1 ? '' : request.url.substring(index));
 		request._url = undefined; // reset cache
 		fn(request, response, next);
 	};
