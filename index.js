@@ -1,5 +1,6 @@
 var protein = require('protein');
 var murl = require('murl');
+var address = require('network-address');
 
 var METHODS = 'GET POST PUT DELETE PATCH OPTIONS'.split(' ');
 var ALIASES = {};
@@ -68,16 +69,7 @@ Root.prototype.error = function(pattern, fn) {
 var toBuffer = function(data) {
 	return typeof data === 'string' ? require('fs').readFileSync(data) : data;
 };
-var localAddress = function() {
-	var faces = require('os').networkInterfaces();
 
-	for (var i in faces) {
-		for (var j = 0; j < faces[i].length; j++) {
-			if (faces[i][j].family === 'IPv4' && !faces[i][j].internal) return faces[i][j].address;
-		}
-	}
-	return '127.0.0.1';
-};
 var listen = function(server, port) { // uses a hack to avoid cluster random port sharing
 	if (port) return server.listen(port);
 	var env = process.env;
@@ -108,7 +100,7 @@ Root.prototype.listen = function(port, options, callback) {
 	var self = this;
 
 	server.on('listening', function() {
-		self.emit('bind', localAddress()+':'+server.address().port, server);
+		self.emit('bind', address()+':'+server.address().port, server);
 		if (!first) return;
 		self.emit('listening');
 	});
@@ -149,8 +141,9 @@ Root.prototype.close = function(callback) {
 	return this;
 };
 
-var normalizeURL = function(url) { // we cant use path.normalize as its platform dependent
+var normalizeURL = function(url) { // require('url').resolve seems to re-encode the url :(
 	var skip = 0;
+
 	return url.split('/').reduceRight(function(result, part, i) {
 		if (result === '..') {
 			skip++;
