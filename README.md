@@ -100,6 +100,18 @@ var plugin = function(app) {
 myApp.use(plugin);
 ```
 
+Alternatively you can pass a another app instance to `use`.
+
+``` js
+var subApp = root();
+
+subApp.get('/test', function(req, res) {
+	res.send('hello from sub app');
+});
+
+myApp.use(subApp); // route requests through subApp as well
+```
+
 ## License
 
 MIT
