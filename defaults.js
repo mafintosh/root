@@ -70,10 +70,13 @@ module.exports = function(app) {
 	app.use('response.error', function(statusCode, message) {
 		var options = {};
 		if (util.isError(statusCode)) {
-			options.error = statusCode;
+			message = statusCode;
+			statusCode = message.statusCode;
+		}
+		if (util.isError(message)) {
+			options.error = message;
 			options.stack = options.error.stack;
 			message = options.error.message;
-			statusCode = options.error.statusCode;
 		}
 		options.message = message;
 		options.statusCode = this.statusCode = statusCode || 500;
