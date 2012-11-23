@@ -69,17 +69,21 @@ module.exports = function(app) {
 	});
 	app.use('response.error', function(statusCode, message) {
 		var options = {};
-		if (util.isError(statusCode)) {
+
+		if (typeof statusCode !== 'number') {
 			message = statusCode;
-			statusCode = message.statusCode;
+			statusCode = 500;
 		}
+
 		if (util.isError(message)) {
 			options.error = message;
 			options.stack = options.error.stack;
 			message = options.error.message;
 		}
+
 		options.message = message;
-		options.statusCode = this.statusCode = statusCode || 500;
+		options.statusCode = this.statusCode = statusCode;
+
 		app.catch(this.request, this, options);
 	});
 
