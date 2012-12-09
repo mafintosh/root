@@ -161,21 +161,35 @@ var normalizeURL = function(url) { // require('url').resolve seems to re-encode 
 	});
 };
 
+var decodeURL = function(url) {
+	var index = url.indexOf('?');
+	url = index === -1 ? url : url.substring(0, index);
+
+	try {
+		url = decodeURIComponent(url);
+	} catch (err) {
+		return null;
+	}
+
+	return url.indexOf('/..') === -1 ? url : normalizeURL(url);
+};
+
+Root.prototype.matches = function(request) {
+	var url = decodeURL(request.url);
+
+	return this.routes[request.method].some(function(entry) {
+		return entry.pattern(url);
+	});
+};
+
 Root.prototype.route = function(request, response, callback) {
 	this.emit('route', request, response);
 
 	var i = -1;
 	var entries = this.routes[request.method];
-	var index = request.url.indexOf('?');
-	var url = index === -1 ? request.url : request.url.substring(0, index);
+	var url = decodeURL(request.url);
 
-	try {
-		url = decodeURIComponent(url);
-	} catch (err) {
-		return response.error(400, 'url is malformed');
-	}
-
-	url = url.indexOf('/..') === -1 ? url : normalizeURL(url);
+	if (!url) return response.error(400, 'url is malformed');
 
 	callback = callback || function(err, message) {
 		if (err) return response.error(err, message);
