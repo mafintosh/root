@@ -34,7 +34,8 @@ parsers.form = function(request, response) {
 
 var onparser = function(name) {
 	if (!parsers[name]) return;
-	if (this.listeners(name).length) return;
+	if (this.parsing[name]) return;
+	this.parsing[name] = true;
 	parsers[name](this, this.response);
 };
 var parseURL = function(request) {
@@ -88,6 +89,7 @@ module.exports = function(app) {
 	});
 
 	app.on('route', function(request, response) {
+		request.parsing = request.parsing || {};
 		request.on('newListener', onparser);
 	});
 };
