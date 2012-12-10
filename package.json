@@ -1,6 +1,6 @@
 {
  "name":"root",
- "version":"0.5.9",
+ "version":"0.5.10",
  "dependencies": {"murl":"0.2.x", "protein":"0.5.x", "network-address":"0.0.x"},
  "repository": "git://github.com/mafintosh/root",
  "description":"a super lightweight web framework featuring prototype mixin support and routing",

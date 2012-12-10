@@ -29,7 +29,7 @@ Root.prototype.__proto__ = process.EventEmitter.prototype;
 
 Root.prototype.use = function(arg) {
 	if (typeof arg === 'function') {
-		arg(this);
+		arg.apply(null, [this].concat(Array.prototype.slice.call(arguments, 1)));
 		return this;
 	}
 	if (typeof arg === 'object') {

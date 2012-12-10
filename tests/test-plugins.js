@@ -6,7 +6,8 @@ var app = root();
 var ran = 0;
 var plugin = false;
 
-app.use(function(app) {
+app.use(function(app, options) {
+	assert.ok(!!options);
 	plugin = true;
 	app.get('/foo', function(req, res) {
 		ran++;
@@ -16,7 +17,7 @@ app.use(function(app) {
 		ran++;
 		this.send('ok\n');
 	});
-});
+}, {});
 
 app.get(function(req, res, next) {
 	assert.notEqual(req.url, '/foo');
