@@ -23,6 +23,8 @@ var Root = function() {
 		this.mixin(request, response);
 		this.route(request, response);
 	});
+
+	this.setMaxListeners(0);
 };
 
 Root.prototype.__proto__ = process.EventEmitter.prototype;
