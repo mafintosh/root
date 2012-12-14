@@ -114,8 +114,8 @@ myApp.use(subApp); // route requests through subApp as well
 
 ## Available plugins
 
-* [response.render](https://github.com/mafintosh/response.render)
-* [response.step](https://github.com/mafintosh/response.step)
+* [response.render](https://github.com/mafintosh/response.render) - PEJS template support
+* [response.step](https://github.com/mafintosh/response.step) - Easy flow and error control
 
 ## License
 
