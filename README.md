@@ -112,6 +112,11 @@ subApp.get('/test', function(req, res) {
 myApp.use(subApp); // route requests through subApp as well
 ```
 
+## Available plugins
+
+* [response.render](https://github.com/mafintosh/response.render)
+* [response.step](https://github.com/mafintosh/response.step)
+
 ## License
 
 MIT
