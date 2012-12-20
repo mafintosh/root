@@ -179,7 +179,7 @@ var decodeURL = function(url) {
 Root.prototype.matches = function(request) {
 	var url = decodeURL(request.url);
 
-	return this.routes[request.method].some(function(entry) {
+	return (this.routes[request.method] || []).some(function(entry) {
 		return entry.pattern(url);
 	});
 };
