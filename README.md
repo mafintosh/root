@@ -49,9 +49,9 @@ Use the `get`, `post`, `put`, `del`, `patch` or `options` method to specify the 
 app.get('/hello/{world}', function(request, response) {
 	response.send({world:req.params.world});
 });
-app.get('/test', function(request, response, skip) {
+app.get('/test', function(request, response, next) {
 	// call skip to call the next matching route
-	skip();
+	next();
 });
 app.get('/test', function(request, response) {
 	response.send('ok');
