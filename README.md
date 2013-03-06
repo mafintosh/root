@@ -50,7 +50,7 @@ app.get('/hello/{world}', function(request, response) {
 	response.send({world:req.params.world});
 });
 app.get('/test', function(request, response, next) {
-	// call skip to call the next matching route
+	// call next to call the next matching route
 	next();
 });
 app.get('/test', function(request, response) {
