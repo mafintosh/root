@@ -35,8 +35,8 @@ app.use('request.time', {getter:true}, function() {
 	return Date.now();
 });
 
-app.get(function(req, res) {
-	res.time();
+app.get(function(request, response) {
+	response.time();
 });
 ```
 
@@ -46,15 +46,15 @@ Routing is done using [murl](https://github.com/mafintosh/murl).
 Use the `get`, `post`, `put`, `del`, `patch` or `options` method to specify the HTTP method you want to route
 
 ``` js
-app.get('/hello/{world}', function(req, res) {
-	res.send({world:req.params.world});
+app.get('/hello/{world}', function(request, response) {
+	response.send({world:req.params.world});
 });
-app.get('/test', function(req, res, next) {
-	// call next to call the next matching route
-	next();
+app.get('/test', function(request, response, skip) {
+	// call skip to call the next matching route
+	skip();
 });
-app.get('/test', function(req, res) {
-	res.send('ok');
+app.get('/test', function(request, response) {
+	response.send('ok');
 });
 ```
 
@@ -74,15 +74,15 @@ This basicly means that you don't need to worry about `/..` attacks when serving
 You can specify an error handler for a specific error code by using the `error` function
 
 ``` js
-app.get('/foo', function(req, res, next) {
-	res.error(400, 'bad request man'); // or use next(400)
+app.get('/foo', function(request, response) {
+	response.error(400, 'bad request man');
 });
 
-app.error(404, function(req, res) {
-	res.send({error:'could not find route'});
+app.error(404, function(request, response) {
+	response.send({error:'could not find route'});
 });
 app.error(function(req, res) {
-	res.send({error:'catch all other errors'});
+	response.send({error:'catch all other errors'});
 });
 ```
 
@@ -92,8 +92,8 @@ To create a plugin simply create a function that accepts an `app`
 
 ``` js
 var plugin = function(app) {
-	app.get('/my-plugin', function(req, res) {
-		res.send('hello from plugin');
+	app.get('/my-plugin', function(request, response) {
+		response.send('hello from plugin');
 	});
 };
 
@@ -105,8 +105,8 @@ Alternatively you can pass a another app instance to `use`.
 ``` js
 var subApp = root();
 
-subApp.get('/test', function(req, res) {
-	res.send('hello from sub app');
+subApp.get('/test', function(request, response) {
+	response.send('hello from sub app');
 });
 
 myApp.use(subApp); // route requests through subApp as well
