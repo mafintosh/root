@@ -68,6 +68,22 @@ module.exports = function(app) {
 		this.setHeader('Content-Length', Buffer.byteLength(body));
 		this.end(body);
 	});
+	app.use('response.redirect', function(location) {
+		this.statusCode = 302;
+		var host = this.request.headers.host;
+
+		if (location.indexOf('://') === -1 || !host) {
+			this.setHeader('Location', location);
+			this.end();
+			return;
+		}
+
+		var connection = this.request.connection;
+		var protocol = connection && connection.encrypted ? 'https' : 'http';
+
+		this.setHeader(protocol+'://'+host+location);
+		this.end();
+	});
 	app.use('response.error', function(statusCode, message) {
 		var options = {};
 
