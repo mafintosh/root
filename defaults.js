@@ -70,18 +70,19 @@ module.exports = function(app) {
 	});
 	app.use('response.redirect', function(location) {
 		this.statusCode = 302;
-		var host = this.request.headers.host;
+		var headers = this.request.headers;
+		var host = headers.host;
 
-		if (location.indexOf('://') === -1 || !host) {
+		if (location.indexOf('://') > -1 || !host) {
 			this.setHeader('Location', location);
 			this.end();
 			return;
 		}
 
-		var connection = this.request.connection;
-		var protocol = connection && connection.encrypted ? 'https' : 'http';
+		var conn = this.request.connection;
+		var protocol = headers['x-forwarded-proto'] || (conn && conn.encrypted ? 'https' : 'http');
 
-		this.setHeader(protocol+'://'+host+location);
+		this.setHeader('Location', protocol+'://'+host+location);
 		this.end();
 	});
 	app.use('response.error', function(statusCode, message) {
