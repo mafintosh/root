@@ -46,19 +46,17 @@ Root.prototype.fork = function(url, fork) {
 	var app = this;
 	fork = fork || new Root();
 
-	Array.prototype.concat.apply([], arguments).forEach(function(pattern) {
-		if (url[0] === '/') {
-			app.all(url.replace(/\/$/, '')+'/*', '/*', function(request, response) {
-				fork.route(request, response);
-			});
-		} else {
-			app.all(function(request, response, next) {
-				if (!request.headers.host || request.headers.host.split(':')[0] !== url) return next();
-				fork.route(request, response);
-			});
-		}
-	});
+	if (url[0] === '/') {
+		app.all(url.replace(/\/$/, '')+'/*', '/*', function(request, response) {
+			fork.route(request, response);
+		});
+		return fork;
+	}
 
+	app.all(function(request, response, next) {
+		if (!request.headers.host || request.headers.host.split(':')[0] !== url) return next();
+		fork.route(request, response);
+	});
 	return fork;
 };
 
