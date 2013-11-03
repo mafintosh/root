@@ -17,11 +17,13 @@ var app = root();
 app.get('/', function(request, response) {
 	response.send({hello:'world'});
 });
+
 app.post('/echo', function(request, response) {
 	request.on('json', function(body) {
 		response.send(body);
 	});
 });
+
 app.listen(8080);
 ```
 
@@ -81,41 +83,58 @@ app.get('/foo', function(request, response) {
 app.error(404, function(request, response) {
 	response.send({error:'could not find route'});
 });
-app.error(function(req, res) {
+app.error(function(request, response) {
 	response.send({error:'catch all other errors'});
 });
 ```
 
-## Plugins
+## Using sub apps
 
-To create a plugin simply create a function that accepts an `app`
-
-``` js
-var plugin = function(app) {
-	app.get('/my-plugin', function(request, response) {
-		response.send('hello from plugin');
-	});
-};
-
-myApp.use(plugin);
-```
-
-Alternatively you can pass a another app instance to `use`.
+Route requests through an sub app by using `app.route`
 
 ``` js
-var subApp = root();
-
-subApp.get('/test', function(request, response) {
-	response.send('hello from sub app');
+var mobileApp = root();
+var myApp = root();
+...
+myApp.all('/m/*', function(request, response, next) {
+	// all routes starting with /m should route through our mobile app as well
+	mobileApp.route(request, response, next);
 });
-
-myApp.use(subApp); // route requests through subApp as well
 ```
 
-## Available plugins
+As a shortcut you can just pass the app directly
 
-* [response.render](https://github.com/mafintosh/response.render) - PEJS template support
-* [response.step](https://github.com/mafintosh/response.step) - Easy flow and error control
+``` js
+myApp.all('/m/*', mobileApp);
+```
+
+This allows you to easily split up your application into seperate parts
+and mount them all on one server
+
+## Full API
+
+### Response
+
+* `response.send(json)` will send back json.
+* `response.send(string)` will send back html (if no Content-Type has been set).
+* `response.error(statusCode, messageOrError)` send back an error
+* `response.redirect(url)` send a http redirect
+
+### Request
+
+* `request.on('json', listener)` will buffer and parse the body as JSON.
+* `request.on('form', listener)` will buffer and parse the body as a url encoded form
+* `request.on('body', listener)` will buffer the body as a string
+* `request.query` contains the parsed querystring from the url
+
+### App
+
+* `app.use(methodName, options, fn)` extend the request or response with a new prototype method
+* `app.(get|head|put|post|del|options|patch)(pattern, fn)` add a route for a http method
+* `app.all(pattern, fn)` route all methods
+* `app.route(request, response, callback)` route a request or response from another app
+* `app.error(statusCode, fn)` add an error handler. use `4xx` to match all 400 errors etc. 
+* `app.on('route', listener)` emitted everytime a request is being routed
 
 ## License
 
