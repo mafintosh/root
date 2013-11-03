@@ -130,7 +130,7 @@ and mount them all on one server
 ### App
 
 * `app.use(methodName, options, fn)` extend the request or response with a new prototype method
-* `app.(get|head|put|post|del|options|patch)(pattern, fn)` add a route for a http method
+* `app.(get|put|post|del|options|patch)(pattern, fn)` add a route for a http method
 * `app.all(pattern, fn)` route all methods
 * `app.route(request, response, callback)` route a request or response from another app
 * `app.error(statusCode, fn)` add an error handler. use `4xx` to match all 400 errors etc. 
