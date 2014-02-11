@@ -103,6 +103,9 @@ Root.prototype.listen = function(port, options, callback) {
 	var first = !this.servers.length;
 	var self = this;
 
+	server.on('connection', function(connection) {
+		self.emit('connection', connection);
+	});
 	server.on('listening', function() {
 		self.emit('bind', address()+':'+server.address().port, server);
 		if (!first) return;
