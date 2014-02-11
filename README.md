@@ -49,7 +49,7 @@ Use the `get`, `post`, `put`, `del`, `patch` or `options` method to specify the 
 
 ``` js
 app.get('/hello/{world}', function(request, response) {
-	response.send({world:req.params.world});
+	response.send({world:request.params.world});
 });
 app.get('/test', function(request, response, next) {
 	// call next to call the next matching route
