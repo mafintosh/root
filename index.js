@@ -42,6 +42,10 @@ Root.prototype.use = function(arg) {
 	return this;
 };
 
+Root.prototype.address = function() {
+	return this.servers[0] && this.servers[0].address();
+};
+
 Root.prototype.fork = function(url, fork) {
 	var app = this;
 	fork = fork || new Root();
