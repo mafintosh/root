@@ -76,13 +76,13 @@ This basicly means that you don't need to worry about `/..` attacks when serving
 You can specify an error handler for a specific error code by using the `error` function
 
 ``` js
-app.get('/foo', function(request, response, opts) {
-	// opts contains .message which is the message passed to response.error
-	// and .stack if an error was passed
+app.get('/foo', function(request, response) {
 	response.error(400, 'bad request man');
 });
 
 app.error(404, function(request, response, opts) {
+	// opts contains .message which is the message passed to response.error
+	// and .stack if an error was passed
 	response.send({error:'could not find route'});
 });
 app.error(function(request, response, opts) {
