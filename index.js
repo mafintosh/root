@@ -265,6 +265,7 @@ Object.keys(ALIASES).forEach(function(alias) {
 			fn = rewriter(this, rewrite, fn);
 		}
 
+		if (!fn) throw new Error('route handler should be a function');
 		addRoute(this, ALIASES[alias], pattern, fn);
 		return this;
 	};
