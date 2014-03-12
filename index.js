@@ -225,8 +225,8 @@ Root.prototype.catch = function(request, response, options) {
 
 var rewriter = function(app, pattern, fn) {
 	pattern = murl(pattern);
-	fn = fn || function(request, response) {
-		app.route(request, response);
+	fn = fn || function(request, response, next) {
+		app.route(request, response, next);
 	};
 
 	return function(request, response, next) {
