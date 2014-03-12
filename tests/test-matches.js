@@ -7,7 +7,7 @@ var noop = function() {};
 app.get('/', noop);
 app.get('/foo', noop);
 app.get('/bar/{baz}', noop);
-app.post('/lol');
+app.post('/lol', noop);
 
 assert.ok(app.matches({method:'GET', url:'/'}));
 assert.ok(app.matches({method:'GET', url:'/foo'}));
