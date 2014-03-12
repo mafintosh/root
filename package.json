@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "dependencies": {
     "murl": "0.4.x",
     "protein": "0.5.x",
