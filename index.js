@@ -195,6 +195,7 @@ Root.prototype.route = function(request, response, callback) {
 	var i = -1;
 	var entries = this.routes[request.method];
 	var url = decodeURL(request.url);
+	var reqUrl = request.url;
 
 	if (!url) return response.error(400, 'url is malformed');
 
@@ -205,6 +206,13 @@ Root.prototype.route = function(request, response, callback) {
 
 	var loop = function(err) {
 		if (err) return callback(err);
+
+		if (request.url !== reqUrl) {
+			reqUrl = request.url;
+			url = decodeURL(request.url);
+			if (!url) return response.error(400, 'url is malformed');
+		}
+		
 		for (i++; i < entries.length && !(request.params = entries[i].pattern(url)); i++);
 		if (!entries[i]) return callback();
 
@@ -229,11 +237,11 @@ var rewriter = function(app, pattern, fn) {
 		app.route(request, response, next);
 	};
 
-	return function(request, response) {
+	return function(request, response, next) {
 		var index = request.url.indexOf('?');
 		request.url = encodeURI(pattern(request.params)) + (index === -1 ? '' : request.url.substring(index));
 		request._url = undefined; // reset cache
-		fn(request, response);
+		fn(request, response, next);
 	};
 };
 
