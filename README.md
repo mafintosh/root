@@ -6,6 +6,8 @@ It's available through npm:
 
 	npm install root
 
+[![build status](https://secure.travis-ci.org/mafintosh/root.png)](http://travis-ci.org/mafintosh/root)
+
 ## Usage
 
 Usage is simple
@@ -135,7 +137,7 @@ and mount them all on one server
 * `app.(get|put|post|del|options|patch)(pattern, fn)` add a route for a http method
 * `app.all(pattern, fn)` route all methods
 * `app.route(request, response, callback)` route a request or response from another app
-* `app.error(statusCode, fn)` add an error handler. use `4xx` to match all 400 errors etc. 
+* `app.error(statusCode, fn)` add an error handler. use `4xx` to match all 400 errors etc.
 * `app.on('route', listener)` emitted everytime a request is being routed
 
 ## License
