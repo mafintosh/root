@@ -23,7 +23,7 @@ parsers.json = function(request, response) {
 		} catch (err) {
 			return response.error(400, 'could not parse json');
 		}
-		request.emit('json', body || {});
+		request.emit('json', body === null ? {} : body);
 	});
 };
 parsers.form = function(request, response) {
