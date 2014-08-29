@@ -19,6 +19,13 @@ app.post('/json', function(req, res, next) {
 		res.end();
 	});
 });
+app.post('/jsonbool', function(req, res, next) {
+	req.on('json', function(body) {
+		ran++;
+		assert.equal(body, false);
+		res.end();
+	});
+});
 app.post('/form', function(req, res, next) {
 	req.on('form', function(body) {
 		ran++;
@@ -28,8 +35,8 @@ app.post('/form', function(req, res, next) {
 });
 
 app.listen(9999, function() {
-	exec('curl -d body localhost:9999/body; curl -d \'{"foo":"bar"}\' localhost:9999/json; curl -d "bar=baz" localhost:9999/form', function() {
-		assert.equal(ran, 3);
+	exec('curl -d body localhost:9999/body; curl -d \'{"foo":"bar"}\' localhost:9999/json; curl -d \'false\' localhost:9999/jsonbool; curl -d "bar=baz" localhost:9999/form', function() {
+		assert.equal(ran, 4);
 		process.exit(0);
 	});
 });
