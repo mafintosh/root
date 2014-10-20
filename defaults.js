@@ -85,15 +85,17 @@ module.exports = function(app) {
 		this.setHeader('Location', protocol+'://'+host+location);
 		this.end();
 	});
-	app.use('response.error', function(status, message) {
+	app.use('response.error', function(status, options) {
 		if (typeof status !== 'number') {
-			message = status;
-			status = message.status || 500;
+			options = status;
+			status = options.status || 500;
 		}
 
-		var err = util.isError(message) ? message : new Error(message || ('server returned '+status));
-		err.status = this.statusCode = status;
-		app.catch(this.request, this, err);
+		if (typeof options === 'string') options = {message:options};
+		if (!options) options = {};
+
+		options.status = this.statusCode = status;
+		app.catch(this.request, this, options);
 	});
 
 	app.on('route', function(request, response) {
