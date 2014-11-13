@@ -37,9 +37,16 @@ app.post('/foo', function(req, res) {
 	res.end();
 });
 
+app.head('/foo', function(req, res) {
+	assert.equal(req.method, 'HEAD');
+	assert.equal(req.url, '/foo');
+	ran++;
+	res.end();
+});
+
 app.listen(9999, function() {
-	exec('curl localhost:9999; curl localhost:9999/foo; curl localhost:9999/foobar; curl localhost:9999/foo/bar; curl -X POST localhost:9999/foo', function() {
-		assert.equal(ran, 5);
+	exec('curl localhost:9999; curl localhost:9999/foo; curl localhost:9999/foobar; curl localhost:9999/foo/bar; curl -X POST localhost:9999/foo; curl -I localhost:9999/foo', function() {
+		assert.equal(ran, 6);
 		process.exit(0);
 	});
 });
