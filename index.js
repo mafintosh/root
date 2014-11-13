@@ -2,7 +2,7 @@ var protein = require('protein');
 var murl = require('murl');
 var address = require('network-address');
 
-var METHODS = 'GET POST PUT DELETE PATCH OPTIONS'.split(' ');
+var METHODS = 'GET HEAD POST PUT DELETE PATCH OPTIONS'.split(' ');
 var ALIASES = {};
 
 ALIASES.all = METHODS;
@@ -17,9 +17,6 @@ var Root = function() {
 	this.servers = [];
 
 	this.on('request', function(request, response) {
-		if (request.method === 'HEAD') {
-			request.method = 'GET';
-		}
 		this.mixin(request, response);
 		this.route(request, response);
 	});
