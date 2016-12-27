@@ -138,7 +138,8 @@ and mount them all on one server
 * `app.all(pattern, fn)` route all methods
 * `app.route(request, response, callback)` route a request or response from another app
 * `app.error(statusCode, fn)` add an error handler. use `4xx` to match all 400 errors etc.
-* `app.on('route', listener)` emitted everytime a request is being routed
+* `app.on('route', function (request, response) {})` emitted every time a request is being routed
+* `app.on('match', function (request, response, pattern) {})` emitted every time a URL pattern is matched
 
 ## License
 

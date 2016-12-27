@@ -189,6 +189,7 @@ Root.prototype.matches = function(request) {
 Root.prototype.route = function(request, response, callback) {
 	this.emit('route', request, response);
 
+	var self = this;
 	var i = -1;
 	var entries = this.routes[request.method];
 	var url = decodeURL(request.url);
@@ -212,6 +213,8 @@ Root.prototype.route = function(request, response, callback) {
 		
 		for (i++; i < entries.length && !(request.params = entries[i].pattern(url)); i++);
 		if (!entries[i]) return callback();
+
+		self.emit('match', request, response, entries[i].pattern.pattern || '*');
 
 		entries[i].fn(request, response, loop);
 	};
