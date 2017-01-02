@@ -199,7 +199,7 @@ Root.prototype.route = function(request, response, callback) {
 
 	callback = callback || function(err, message) {
 		if (err) return response.error(err, message);
-		response.error(404, 'cannot find ' + url + '\n');
+		response.error(404, 'cannot find ' + request.method + ' ' + url + '\n');
 	};
 
 	var loop = function(err) {
