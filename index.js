@@ -1,6 +1,8 @@
 var protein = require('protein');
 var murl = require('murl');
 var address = require('network-address');
+var inherits = require('inherits');
+var events = require('events');
 
 var METHODS = 'GET HEAD POST PUT DELETE PATCH OPTIONS'.split(' ');
 var ALIASES = {};
@@ -24,7 +26,7 @@ var Root = function() {
 	this.setMaxListeners(0);
 };
 
-Root.prototype.__proto__ = process.EventEmitter.prototype;
+inherits(Root, events.EventEmitter)
 
 Root.prototype.use = function(arg) {
 	if (typeof arg === 'function') {
@@ -210,7 +212,7 @@ Root.prototype.route = function(request, response, callback) {
 			url = decodeURL(request.url);
 			if (!url) return response.error(400, 'url is malformed');
 		}
-		
+
 		for (i++; i < entries.length && !(request.params = entries[i].pattern(url)); i++);
 		if (!entries[i]) return callback();
 
