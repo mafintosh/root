@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "3.1.1",
+  "version": "3.2.0",
   "dependencies": {
     "inherits": "^2.0.3",
     "murl": "0.4.x",
